@@ -11,7 +11,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -25,7 +24,6 @@ class RemoteModule(var baseUrl: String) {
     @Singleton
     fun provideRetrofit(client: OkHttpClient): Retrofit {
         val gson = GsonBuilder()
-                .setLenient()
                 .create()
         return Retrofit.Builder()
                 .baseUrl(baseUrl)
@@ -57,9 +55,6 @@ class RemoteModule(var baseUrl: String) {
         }
         val builder = OkHttpClient
                 .Builder()
-                .connectTimeout(1, TimeUnit.MINUTES)
-                .readTimeout(1, TimeUnit.MINUTES)
-                .writeTimeout(1, TimeUnit.MINUTES)
                 .addInterceptor(loggingInterceptor)
                 .addInterceptor(urlInterceptor)
         return builder.build()
