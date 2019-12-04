@@ -24,6 +24,8 @@ class SurveyAdapter : RecyclerView.Adapter<SurveyAdapter.EventViewHolder>() {
     override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
         holder.view.apply {
             surveys[position].let {
+                tv_title.text = it.title
+                tv_description.text = it.description
                 Glide.with(this).load(it.coverImageUrl).into(imv_background)
             }
         }

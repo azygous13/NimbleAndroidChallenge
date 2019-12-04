@@ -35,7 +35,6 @@ class SurveyActivity : AppCompatActivity() {
         viewModel.getSurveys().observe(this, Observer {
             adapter.surveys = it
             viewpager.setCurrentItem(0, false)
-            setTitleAndDescription()
         })
     }
 
@@ -51,17 +50,9 @@ class SurveyActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 viewModel.currentIndex = position
-                setTitleAndDescription()
             }
         })
         indicator.setViewPager(viewpager)
         adapter.registerAdapterDataObserver(indicator.adapterDataObserver)
-    }
-
-    private fun setTitleAndDescription() {
-        viewModel.getCurrentSurvey()?.let {
-            tv_title.text = it.title
-            tv_description.text = it.description
-        }
     }
 }
