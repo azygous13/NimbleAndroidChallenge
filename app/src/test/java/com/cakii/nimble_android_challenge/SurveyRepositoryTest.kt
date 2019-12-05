@@ -2,7 +2,7 @@ package com.cakii.nimble_android_challenge
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.cakii.nimble_android_challenge.data.entity.Survey
-import com.cakii.nimble_android_challenge.data.service.Service
+import com.cakii.nimble_android_challenge.data.service.SurveyService
 import com.cakii.nimble_android_challenge.repository.SurveyRepository
 import io.reactivex.Single
 import org.junit.Before
@@ -17,13 +17,13 @@ class SurveyRepositoryTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    lateinit var service: Service
+    lateinit var service: SurveyService
     lateinit var repository: SurveyRepository
     lateinit var surveys: List<Survey>
 
     @Before
     fun setup() {
-        service = mock(Service::class.java)
+        service = mock(SurveyService::class.java)
         repository = SurveyRepository(service)
         surveys = listOf(
             Survey("Title1", "Desc1", "imageUrl1"),

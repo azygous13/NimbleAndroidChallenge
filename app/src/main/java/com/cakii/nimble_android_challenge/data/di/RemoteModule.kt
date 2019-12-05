@@ -1,6 +1,6 @@
 package com.cakii.nimble_android_challenge.data.di
 
-import com.cakii.nimble_android_challenge.data.service.Service
+import com.cakii.nimble_android_challenge.data.service.SurveyService
 import com.cakii.nimble_android_challenge.utils.Prefs
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -18,7 +18,7 @@ class RemoteModule(var baseUrl: String) {
 
     @Provides
     @Singleton
-    fun provideService(retrofit: Retrofit): Service = retrofit.create(Service::class.java)
+    fun provideService(retrofit: Retrofit): SurveyService = retrofit.create(SurveyService::class.java)
 
     @Provides
     @Singleton

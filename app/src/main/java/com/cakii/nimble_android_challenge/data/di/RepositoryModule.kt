@@ -1,6 +1,6 @@
 package com.cakii.nimble_android_challenge.data.di
 
-import com.cakii.nimble_android_challenge.data.service.Service
+import com.cakii.nimble_android_challenge.data.service.SurveyService
 import com.cakii.nimble_android_challenge.repository.SurveyRepository
 import com.cakii.nimble_android_challenge.repository.UserRepository
 import dagger.Module
@@ -12,11 +12,11 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideUserRepository(remoteSource: Service): UserRepository =
+    fun provideUserRepository(remoteSource: SurveyService): UserRepository =
         UserRepository(remoteSource)
 
     @Provides
     @Singleton
-    fun provideSurveyRepository(remoteSource: Service): SurveyRepository =
+    fun provideSurveyRepository(remoteSource: SurveyService): SurveyRepository =
         SurveyRepository(remoteSource)
 }

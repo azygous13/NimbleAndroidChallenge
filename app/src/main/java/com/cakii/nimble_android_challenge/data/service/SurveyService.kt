@@ -8,7 +8,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 
-interface Service {
+interface SurveyService {
 
     @GET("surveys.json?page=1&per_page=10")
     fun getSurveys(): Single<List<Survey>>
