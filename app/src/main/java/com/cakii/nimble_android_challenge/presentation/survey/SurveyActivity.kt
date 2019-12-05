@@ -1,5 +1,6 @@
 package com.cakii.nimble_android_challenge.presentation.survey
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.VisibleForTesting
@@ -41,6 +42,10 @@ class SurveyActivity : AppCompatActivity() {
     private fun setupView() {
         toolbar.imv_refresh.setOnClickListener {
             viewModel.loadSurveys()
+        }
+        btn_take_the_survey.setOnClickListener {
+            val intent = Intent(this, SurveyDetailActivity::class.java)
+            startActivity(intent)
         }
 
         adapter = SurveyAdapter()
