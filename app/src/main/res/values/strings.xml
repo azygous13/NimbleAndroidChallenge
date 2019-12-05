@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">nimble_android_challenge</string>
+    <string name="base_url">https://nimble-survey-api.herokuapp.com/</string>
     <string name="take_the_survey">Take the survey</string>
 </resources>

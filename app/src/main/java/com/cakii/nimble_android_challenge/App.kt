@@ -12,7 +12,6 @@ class App : Application() {
 
     companion object {
         lateinit var component: AppComponent
-        private const val BASE_URL = "https://nimble-survey-api.herokuapp.com/"
     }
 
     override fun onCreate() {
@@ -23,7 +22,7 @@ class App : Application() {
     private fun buildDependencyGraph() {
         component = DaggerAppComponent.builder()
             .appModule(AppModule(this))
-            .remoteModule(RemoteModule(BASE_URL))
+            .remoteModule(RemoteModule(getString(R.string.base_url)))
             .repositoryModule(RepositoryModule())
             .build()
     }
