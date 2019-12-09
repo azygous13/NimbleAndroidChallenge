@@ -3,10 +3,7 @@ package com.cakii.nimble_android_challenge.data.service
 import com.cakii.nimble_android_challenge.data.entity.Auth
 import com.cakii.nimble_android_challenge.data.entity.Survey
 import io.reactivex.Single
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface SurveyService {
 
@@ -14,6 +11,7 @@ interface SurveyService {
     fun getSurveys(): Single<List<Survey>>
 
     @FormUrlEncoded
+    @Headers("No-Authentication: true")
     @POST("oauth/token")
     fun auth(
         @Field("username") username: String,
