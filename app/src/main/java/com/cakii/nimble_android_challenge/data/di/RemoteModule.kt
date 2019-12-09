@@ -1,5 +1,7 @@
 package com.cakii.nimble_android_challenge.data.di
 
+import android.content.Context
+import com.cakii.nimble_android_challenge.data.interceptor.AuthInterceptor
 import com.cakii.nimble_android_challenge.data.service.SurveyService
 import com.cakii.nimble_android_challenge.utils.Prefs
 import com.google.gson.GsonBuilder
@@ -7,6 +9,7 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -18,45 +21,58 @@ class RemoteModule(var baseUrl: String) {
 
     @Provides
     @Singleton
-    fun provideService(retrofit: Retrofit): SurveyService = retrofit.create(SurveyService::class.java)
+    fun provideService(retrofit: Retrofit): SurveyService =
+        retrofit.create(SurveyService::class.java)
 
     @Provides
     @Singleton
     fun provideRetrofit(client: OkHttpClient): Retrofit {
         val gson = GsonBuilder()
-                .create()
+            .create()
         return Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .client(client)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build()
+            .baseUrl(baseUrl)
+            .client(client)
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
     }
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(prefs: Prefs): OkHttpClient {
+    fun provideOkHttpClient(context: Context, prefs: Prefs): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
-        val urlInterceptor = Interceptor { chain ->
-            val url = chain.request().url()
-            val urlBuilder = url.newBuilder()
-            if (url.encodedPath().contains("oauth/token")) {
-                chain.proceed(chain.request())
-            } else {
-                prefs.auth.let {
-                    urlBuilder.addQueryParameter("access_token", it.accessToken)
-                }
-                val httpUrl = urlBuilder.build()
-                val request = chain.request().newBuilder().url(httpUrl).build()
-                chain.proceed(request)
-            }
+        val tokenInterceptor = TokenInterceptor().apply {
+            setSessionToken(prefs.auth.accessToken)
         }
         val builder = OkHttpClient
-                .Builder()
-                .addInterceptor(loggingInterceptor)
-                .addInterceptor(urlInterceptor)
+            .Builder()
+            .addInterceptor(loggingInterceptor)
+            .addInterceptor(tokenInterceptor)
+            .authenticator(AuthInterceptor(context, prefs))
         return builder.build()
+    }
+
+    @Singleton
+    class TokenInterceptor: Interceptor {
+        private var token = ""
+
+        fun setSessionToken(token: String) {
+            this.token = token
+        }
+
+        override fun intercept(chain: Interceptor.Chain): Response {
+            var request = chain.request()
+
+            if (request.header("No-Authentication") == null) {
+                val httpUrl = request.url().newBuilder()
+                    .addQueryParameter("access_token", token)
+                    .build()
+                request = chain.request().newBuilder().url(httpUrl).build()
+            }
+
+            return chain.proceed(request)
+        }
     }
 }

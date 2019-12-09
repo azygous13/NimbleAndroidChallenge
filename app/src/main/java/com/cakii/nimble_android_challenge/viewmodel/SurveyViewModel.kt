@@ -1,17 +1,16 @@
 package com.cakii.nimble_android_challenge.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.cakii.nimble_android_challenge.Mockable
 import com.cakii.nimble_android_challenge.data.entity.Survey
 import com.cakii.nimble_android_challenge.repository.SurveyRepository
-import com.cakii.nimble_android_challenge.repository.UserRepository
 import com.cakii.nimble_android_challenge.utils.Prefs
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import retrofit2.HttpException
 import javax.inject.Inject
 
 @Mockable
@@ -19,8 +18,6 @@ class SurveyViewModel : ViewModel() {
 
     @Inject
     lateinit var prefs: Prefs
-    @Inject
-    lateinit var userRepository: UserRepository
     @Inject
     lateinit var surveyRepository: SurveyRepository
 
@@ -35,8 +32,6 @@ class SurveyViewModel : ViewModel() {
     var currentIndex = 0
 
     fun getSurveys(): LiveData<List<Survey>> = surveys
-
-    fun getCurrentSurvey(): Survey? = surveys.value?.get(currentIndex)
 
     fun isLoading(): LiveData<Boolean> = loading
 
@@ -53,28 +48,8 @@ class SurveyViewModel : ViewModel() {
                 },
                 { e ->
                     loading.value = false
-                    if (e is HttpException) {
-                        val statusCode = e.response().code()
-                        if (statusCode == 401) {
-                            retry()
-                        }
-                    }
+                    Log.e("SurveyViewModel", e.localizedMessage)
                 })
-            .also {
-                disposable.add(it)
-            }
-    }
-
-    private fun retry() {
-        loading.value = true
-        userRepository.auth("carlos@nimbl3.com", "antikera", "password")
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe { response ->
-                loading.value = false
-                prefs.auth = response
-                loadSurveys()
-            }
             .also {
                 disposable.add(it)
             }
