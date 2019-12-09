@@ -26,7 +26,7 @@ class SurveyAdapter : RecyclerView.Adapter<SurveyAdapter.EventViewHolder>() {
             surveys[position].let {
                 tv_title.text = it.title
                 tv_description.text = it.description
-                Glide.with(this).load(it.coverImageUrl).into(imv_background)
+                Glide.with(this).load("${it.coverImageUrl}l").into(imv_background)
             }
         }
     }
