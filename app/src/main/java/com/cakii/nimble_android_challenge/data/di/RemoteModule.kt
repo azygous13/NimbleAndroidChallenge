@@ -1,7 +1,7 @@
 package com.cakii.nimble_android_challenge.data.di
 
 import android.content.Context
-import com.cakii.nimble_android_challenge.data.interceptor.AuthInterceptor
+import com.cakii.nimble_android_challenge.data.authenticator.AuthAuthenticator
 import com.cakii.nimble_android_challenge.data.service.SurveyService
 import com.cakii.nimble_android_challenge.utils.Prefs
 import com.google.gson.GsonBuilder
@@ -50,7 +50,7 @@ class RemoteModule(var baseUrl: String) {
             .Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(tokenInterceptor)
-            .authenticator(AuthInterceptor(context, prefs))
+            .authenticator(AuthAuthenticator(context, prefs))
         return builder.build()
     }
 

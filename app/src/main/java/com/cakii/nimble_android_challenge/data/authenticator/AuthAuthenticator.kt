@@ -1,4 +1,4 @@
-package com.cakii.nimble_android_challenge.data.interceptor
+package com.cakii.nimble_android_challenge.data.authenticator
 
 import android.content.Context
 import com.cakii.nimble_android_challenge.R
@@ -11,7 +11,7 @@ import java.io.IOException
 import java.net.URL
 
 
-class AuthInterceptor(private val context: Context, private val prefs: Prefs): Authenticator {
+class AuthAuthenticator(private val context: Context, private val prefs: Prefs): Authenticator {
 
     @Throws(IOException::class)
     override fun authenticate(route: Route?, response: Response?): Request? {
